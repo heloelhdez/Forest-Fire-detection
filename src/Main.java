@@ -6,17 +6,18 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.awt.Color;
 //modifica los valores de los pixeles de cada subimagen, porque va de 0 a 40, pero hay que sumar y y x o algo asi
 
 public class Main {
     public static ArrayList<File> archivos = new ArrayList<File>();
-    public static double red, green, blue, avgRed, avgGreen, avgBlue, avgHue, avgSat, avgInten;
-    public static double theta, hue, saturation, intensity;
+    public static float red, green, blue, avgRed, avgGreen, avgBlue, avgHue, avgSat, avgInten;
+    public static float theta, hue , saturation, intensity, suma;
     public static String clase = "''";
     public static int[][] pixels;
     public static void main(String[] args) {
 	    try{
-    	    final File folder = new File("../src");
+    	    final File folder = new File("../src/rosa");
             listFilesForFolder(folder);
             for (File object: archivos) {
                 int i = object.getAbsolutePath().lastIndexOf('.');
@@ -27,19 +28,51 @@ public class Main {
                     BufferedImage image = ImageIO.read(new File(object.getAbsolutePath()));
                     int w = image.getWidth();
                     int h = image.getHeight();
-                    pixels = new int[w][h];
-                    for (int y = 0;y<h; y++) {
-                        for (int x = 0;x<w ; x++) {
-                            pixels[x][y]=image.getRGB(x,y);
-                            Color colores = new Color(pixels[x][y]);
-                            System.out.print("["+x+","+y+"]("+colores.getRed()+","+colores.getGreen()+","+colores.getBlue()+")");   // = (dataBuffInt[100] >> 16) & 0xFF
-                            // = (dataBuffInt[100] >> 8)  & 0xFF
-                            // = (dataBuffInt[100] >> 0)  & 0xFF
-                        }
-                        System.out.println("");
-                 }
+                    pixels = new int[800][600];
+                    for (int y=0;y<15; y++){
+                		for (int x=0;x<20;x++){
+                			for (int py=0;py<40;py++){
+                	           for(int px=0;px<40;px++){
+                	               pixels[px+x*40][py+y*40]=image.getRGB(px+x*40,py+y*40);
+                	               
+                                   Color colorRGB = new Color(pixels[px+x*40][py+y*40]);
+                                   float[] hsb = Color.RGBtoHSB(colorRGB.getRed(), colorRGB.getGreen(), colorRGB.getBlue(), null);
+                	               red+= colorRGB.getRed();
+                	               green+= colorRGB.getGreen();
+                	               blue+= colorRGB.getBlue();
+                	               //hue += getHue(colorRGB.getRed(),colorRGB.getGreen(),colorRGB.getBlue());
+                	               //saturation += (1 - (3* minim(colorRGB.getRed(),colorRGB.getGreen(),colorRGB.getBlue())/(colorRGB.getRed()+colorRGB.getGreen()+ colorRGB.getBlue())));
+                	               //valor = (colorRGB.getRed() + colorRGB.getGreen() + colorRGB.getBlue()/3);
+                	               //intensity += valor;
+                	               //System.out.print(hsb[0]+ " ");
+                	               //System.out.print(hsb[1]+" ");
+                	               //System.out.println(hsb[2]);
+                                    hue += hsb[0];
+                                    saturation += hsb[1];
+                                    intensity += hsb[2];
+                                }
+                            }
+                            avgRed= red/1600.0f;
+                            avgGreen= green/1600.0f;
+                            avgBlue= blue/1600.0f;
+                			avgHue = hue/1600.0f;
+                			avgSat = saturation/1600.0f;
+                			avgInten = intensity/1600.0f;
+                			System.out.format("%f,%f,%f,%f,%f,%f,%s\n",avgRed,avgGreen,avgBlue,avgHue,avgSat,avgInten,clase); 
+                			red=green=blue = 0.0f;
+                			avgRed = 0.0f;
+                			avgGreen = 0.0f;
+                			avgBlue =0.0f;
+                			avgHue=0.0f;
+                			avgSat=0.0f;
+                			avgInten=0.0f;
+                			hue = 0.0f;
+                            saturation = 0.0f;
+                            intensity = 0.0f;
+                			}
+                		}
+                	}
                 }
-            }
         }
         catch(Exception e){
             System.out.println("Entre en exepcion");
@@ -47,7 +80,7 @@ public class Main {
             }   
         }
 
-    public int minim (int r, int g, int b){
+    public static int minim (int r, int g, int b){
     	int min=0;
     	if (r>g){
     		if(g>=b)
@@ -68,20 +101,30 @@ public class Main {
     			min = g;
         }
         return min;
+        
     }
     
-    public double valueTheta (int posX, int posY){
-        int color =  pixels[posX][posY];
-        Color colorRGB = new Color(color);
-        double thethaV;
-        int rMinG=0,rMinB=0, gMinB=0; 
-        rMinG = colorRGB.getRed() - colorRGB.getGreen();
-        rMinB = colorRGB.getRed() - colorRGB.getBlue();
-        gMinB = colorRGB.getRed() - colorRGB.getGreen();
-        double numerador = 0.5 * (rMinG + rMinB);
-        thethaV=  Math.toDegrees(Math.acos(numerador / Math.pow((Math.pow(rMinG,2) + (rMinG * gMinB)),0.5)));
-        return thethaV;
+   public static int getHue(int red, int green, int blue) {
+
+    float min = Math.min(Math.min(red, green), blue);
+    float max = Math.max(Math.max(red, green), blue);
+
+    float huev = 0f;
+    if (max == red) {
+        huev = (green - blue) / (max - min);
+
+    } else if (max == green) {
+        huev = 2f + (blue - red) / (max - min);
+
+    } else {
+        huev = 4f + (red - green) / (max - min);
     }
+
+    huev = huev * 60;
+    if (huev < 0) huev = huev + 360;
+
+    return Math.round(huev);
+}
     
  public static void listFilesForFolder(final File folder) {
     for (final File fileEntry : folder.listFiles()) {
