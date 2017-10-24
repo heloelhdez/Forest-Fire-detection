@@ -40,12 +40,13 @@ public class Main {
                 if (extension.compareTo("jpeg") == 0||extension.compareTo("jpg") == 0 || extension.compareTo("png") == 0) {
                     totalImganes++;
                     BufferedImage image = ImageIO.read(new File(object.getAbsolutePath()));
-                    System.out.println("%Estoy en: "+object.getAbsolutePath()); 
+                    System.out.println("%Imagen: "+object.getAbsolutePath()); 
                     //int w = image.getWidth();
                     //int h = image.getHeight();
                     pixels = new int[800][600];
                     for (int y=0;y<5; y++){
                 		for (int x=0;x<5;x++){
+                		    System.out.println("%Subimagen: "+y+","+x);
                 			for (int py=0;py<120;py++){
                 	           for(int px=0;px<160;px++){
                 	               pixels[px+x*160][py+y*120]=image.getRGB(px+x*160,py+y*120);
