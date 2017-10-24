@@ -13,21 +13,36 @@ public class Main {
     public static ArrayList<File> archivos = new ArrayList<File>();
     public static float red, green, blue, avgRed, avgGreen, avgBlue, avgHue, avgSat, avgInten;
     public static float theta, hue , saturation, intensity, suma;
-    public static String clase = "'false'";
+    public static String clase = "FALSE";
     public static int[][] pixels;
     public static void main(String[] args) {
         //AQUÍ VAN LOS PRINTS PARA FORMATO ARF
+        System.out.println("@relation fire.detection");
+        System.out.println();
+        System.out.println("@attribute Red numeric");
+        System.out.println("@attribute Green numeric");
+        System.out.println("@attribute Blue numeric");
+        System.out.println("@attribute Hue numeric");
+        System.out.println("@attribute Saturation numeric");
+        System.out.println("@attribute Brightness numeric");
+        System.out.println("@attribute Class {TRUE, FALSE}");
+        System.out.println();
+	    System.out.println("@data");
+	    int totalImganes=0;
 	    try{
-    	    final File folder = new File("../src/una");
+    	    final File folder = new File("../src");
             listFilesForFolder(folder);
             for (File object: archivos) {
+                
                 int i = object.getAbsolutePath().lastIndexOf('.');
                 String extension = "";
                 extension = object.getAbsolutePath().substring(i+1);
                 if (extension.compareTo("jpeg") == 0||extension.compareTo("jpg") == 0 || extension.compareTo("png") == 0) {
+                    totalImganes++;
                     BufferedImage image = ImageIO.read(new File(object.getAbsolutePath()));
-                    int w = image.getWidth();
-                    int h = image.getHeight();
+                    System.out.println("%Estoy en: "+object.getAbsolutePath()); 
+                    //int w = image.getWidth();
+                    //int h = image.getHeight();
                     pixels = new int[800][600];
                     for (int y=0;y<5; y++){
                 		for (int x=0;x<5;x++){
@@ -66,6 +81,7 @@ public class Main {
                 		}
                 	}
                 }
+                System.out.println("%Se leyeron "+totalImganes+" imagenes");
         }
         catch(Exception e){
             System.out.println("Entre en exepcion");
