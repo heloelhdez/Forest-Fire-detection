@@ -13,43 +13,36 @@ public class Main {
     public static ArrayList<File> archivos = new ArrayList<File>();
     public static float red, green, blue, avgRed, avgGreen, avgBlue, avgHue, avgSat, avgInten;
     public static float theta, hue , saturation, intensity, suma;
-    public static String clase = "''";
+    public static String clase = "'false'";
     public static int[][] pixels;
     public static void main(String[] args) {
+        //AQUÍ VAN LOS PRINTS PARA FORMATO ARF
 	    try{
-    	    final File folder = new File("../src/rosa");
+    	    final File folder = new File("../src/una");
             listFilesForFolder(folder);
             for (File object: archivos) {
                 int i = object.getAbsolutePath().lastIndexOf('.');
                 String extension = "";
                 extension = object.getAbsolutePath().substring(i+1);
                 if (extension.compareTo("jpeg") == 0||extension.compareTo("jpg") == 0 || extension.compareTo("png") == 0) {
-                    System.out.println("Estoy en: "+object.getAbsolutePath()); 
                     BufferedImage image = ImageIO.read(new File(object.getAbsolutePath()));
                     int w = image.getWidth();
                     int h = image.getHeight();
                     pixels = new int[800][600];
-                    for (int y=0;y<15; y++){
-                		for (int x=0;x<20;x++){
-                			for (int py=0;py<40;py++){
-                	           for(int px=0;px<40;px++){
-                	               pixels[px+x*40][py+y*40]=image.getRGB(px+x*40,py+y*40);
+                    for (int y=0;y<5; y++){
+                		for (int x=0;x<5;x++){
+                			for (int py=0;py<120;py++){
+                	           for(int px=0;px<160;px++){
+                	               pixels[px+x*160][py+y*120]=image.getRGB(px+x*160,py+y*120);
                 	               
-                                   Color colorRGB = new Color(pixels[px+x*40][py+y*40]);
+                                   Color colorRGB = new Color(pixels[px+x*160][py+y*120]);
                                    float[] hsb = Color.RGBtoHSB(colorRGB.getRed(), colorRGB.getGreen(), colorRGB.getBlue(), null);
                 	               red+= colorRGB.getRed();
                 	               green+= colorRGB.getGreen();
                 	               blue+= colorRGB.getBlue();
-                	               //hue += getHue(colorRGB.getRed(),colorRGB.getGreen(),colorRGB.getBlue());
-                	               //saturation += (1 - (3* minim(colorRGB.getRed(),colorRGB.getGreen(),colorRGB.getBlue())/(colorRGB.getRed()+colorRGB.getGreen()+ colorRGB.getBlue())));
-                	               //valor = (colorRGB.getRed() + colorRGB.getGreen() + colorRGB.getBlue()/3);
-                	               //intensity += valor;
-                	               //System.out.print(hsb[0]+ " ");
-                	               //System.out.print(hsb[1]+" ");
-                	               //System.out.println(hsb[2]);
-                                    hue += hsb[0];
-                                    saturation += hsb[1];
-                                    intensity += hsb[2];
+                                   hue += hsb[0];
+                                   saturation += hsb[1];
+                                   intensity += hsb[2];
                                 }
                             }
                             avgRed= red/1600.0f;
