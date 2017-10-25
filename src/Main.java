@@ -37,10 +37,10 @@ public class Main {
                 int i = object.getAbsolutePath().lastIndexOf('.');
                 String extension = "";
                 extension = object.getAbsolutePath().substring(i+1);
-                if (extension.compareTo("jpeg") == 0||extension.compareTo("jpg") == 0 || extension.compareTo("png") == 0) {
+                if (extension.compareTo("jpeg") == 0||extension.compareTo("jpg") == 0 || extension.compareTo("png") == 0||extension.compareTo("JPG") == 0 ) {
                     totalImganes++;
                     BufferedImage image = ImageIO.read(new File(object.getAbsolutePath()));
-                    System.out.println("%Imagen: "+object.getAbsolutePath()); 
+                    System.out.println("%Imagen "+totalImganes+" : "+object.getAbsolutePath()); 
                     //int w = image.getWidth();
                     //int h = image.getHeight();
                     pixels = new int[800][600];
